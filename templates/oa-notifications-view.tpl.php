@@ -1,5 +1,6 @@
 <?php
 /**
+ * @file
  * Displays read-only list of notifications.
  *
  * $group - Groups to notify.
