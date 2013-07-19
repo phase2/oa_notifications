@@ -153,6 +153,14 @@ function oa_notifications_edit_form($form, &$form_state, $node) {
   $form['notifications']['user']['#prefix'] = '<div id="user-div">';
   $form['notifications']['user']['#suffix'] = '</div>';
 
+  $form['notifications']['skip_notify']['#ajax'] = array(
+    'callback' => 'oa_notifications_skip_ajax_callback',
+    'wrapper' => 'skip-notify-div',
+    'method' => 'replace',
+  );
+  $form['notifications']['skip_notify']['#prefix'] = '<div id="skip-notify-div">';
+  $form['notifications']['skip_notify']['#suffix'] = '</div>';
+
   $form['subscribe'] = oa_notifications_subscribe_button($node);
   $form['details'] = oa_notifications_show_details_button($node);
 

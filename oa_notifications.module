@@ -7,9 +7,9 @@
 include_once 'oa_notifications.features.inc';
 
 /**
- * @file
- * Provides hook implementations and functionality for oa_notifications.
+ * Name of session key for saving "do not notify" option
  */
+define('SKIP_FLAG', 'oa_skip_notify');
 
 /**
  * Implements hook_ctools_plugin_directory
@@ -74,6 +74,11 @@ function oa_notifications_theme() {
  */
 function oa_notifications_get_notifications($node) {
   $bucket = &drupal_static(__FUNCTION__);
+
+  // see if notifications should be skipped
+  if (oa_notification_skip()) {
+    return array();
+  }
 
   if (!isset($bucket)) {
     $bucket = array();
@@ -190,6 +195,9 @@ function oa_notifications_load_multiple($source_entity, $source_type = 'node', $
  * @param $values
  */
 function oa_notifications_save_notifications($values) {
+  if (isset($values['notifications']['skip_notify'])) {
+    $_SESSION[SKIP_FLAG] = $values['notifications']['skip_notify'];
+  }
   if (isset($values['source_entity']) && isset($values['source_type'])) {
     drupal_alter('oa_notifications_save', $values);
     $source_type = $values['source_type'];
@@ -324,6 +332,22 @@ function oa_notifications_ajax_callback($form, $form_state) {
 }
 
 /**
+ * Callback for AJAX saving of the skip-notification option.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
+ */
+function oa_notifications_skip_ajax_callback($form, $form_state) {
+  if (isset($form_state['values']['notifications']['skip_notify'])) {
+    $_SESSION[SKIP_FLAG] = $form_state['values']['notifications']['skip_notify'];
+  }
+
+  $element = $form_state['triggering_element']['#name'];
+  return $form[$element];
+}
+
+/**
  * Define the fields that are used for configuring notifications.
  *
  * @param $form
@@ -411,6 +435,13 @@ function oa_notifications_form_fields(&$form, &$form_state, $node) {
     '#default_value' => array_keys($notifications['user']),
     '#disabled' => !$override,
   );
+
+  oa_notifications_reset();
+  $form['notifications']['skip_notify'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Do not send notifications for this update.'),
+  );
+
 }
 
 /**
@@ -592,4 +623,24 @@ function oa_notifications_preprocess_flag(&$vars) {
       $vars['link_text'] = '<i class="icon-ban-circle"></i> ' . $vars['link_text'];
     }
   }
+}
+
+/**
+ * Reset any notification flag saved in session
+ */
+function oa_notifications_reset() {
+  if (isset($_SESSION[SKIP_FLAG])) {
+    unset($_SESSION[SKIP_FLAG]);
+  }
+}
+
+/**
+ * Return whether notification should be skipped
+ */
+function oa_notification_skip() {
+  // see if session is overriding the notification option
+  if (isset($_SESSION[SKIP_FLAG])) {
+    return $_SESSION[SKIP_FLAG];
+  }
+  return FALSE;
 }
