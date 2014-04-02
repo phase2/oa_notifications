@@ -44,7 +44,7 @@ function oa_notifications_menu() {
 function oa_notifications_contextual_tabs_alter(&$data) {
   $node = menu_get_object();
   // Add the subscribe link to spaces and sections only.
-  if ($node->type === 'oa_space' || $node->type === 'oa_section') {
+  if (isset($node->type) && ($node->type === 'oa_space' || $node->type === 'oa_section')) {
     drupal_add_js(drupal_get_path('module', 'oa_notifications') . '/oa_notifications.js');
     array_push($data['links'], array('data' => flag_create_link('subscribe_section_content', $node->nid)));
   }
