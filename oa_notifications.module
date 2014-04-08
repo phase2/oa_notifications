@@ -480,7 +480,7 @@ function oa_notifications_form_fields(&$form, &$form_state, $node) {
     '#type' => 'select',
     '#title' => t('Users'),
     '#multiple' => TRUE,
-    '#options' => array_map(create_function('$user', 'return $user->realname;'), $space_users),
+    '#options' => array_map(create_function('$user', 'return oa_core_realname($user);'), $space_users),
     '#default_value' => array_keys($notifications['user']),
     '#disabled' => !$override,
   );
@@ -572,7 +572,7 @@ function oa_notifications_ajax_details($node) {
   foreach ($bucket as $uid => $user) {
     if (node_access('view', $node, $user)) {
       $render[$uid] = array(
-        'name' => $user->realname,
+        'name' => oa_core_realname($user),
         'mail' => $user->mail,
       );
     }
