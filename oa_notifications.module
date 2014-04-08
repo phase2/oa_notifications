@@ -448,12 +448,14 @@ function oa_notifications_form_fields(&$form, &$form_state, $node) {
   );
 
   $group_options = array_map(create_function('$group', 'return $group->title;'), $all_groups);
-  if (!empty($node->og_group_ref)) {
-    $space = node_load($node->og_group_ref[LANGUAGE_NONE][0]['target_id']);
-    $group_options = array($space->nid => $space->title) + $group_options;
+  if (($node->type == OA_SPACE_TYPE) && (empty($node->nid))) {
+    // do not add space to notification list when creating a new space
   }
-  elseif (($node->type === 'oa_space') && (!empty($node->nid))) {
-    $group_options = array($node->nid => $node->title) + $group_options;
+  else {
+    $space_id = oa_core_get_space_context();
+    if (!empty($space_id) && ($space = node_load($space_id))) {
+      $group_options = array($space->nid => $space->title) + $group_options;
+    }
   }
 
   $form['notifications']['group'] = array(
