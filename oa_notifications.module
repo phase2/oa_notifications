@@ -452,7 +452,7 @@ function oa_notifications_form_fields(&$form, &$form_state, $node) {
     $space = node_load($node->og_group_ref[LANGUAGE_NONE][0]['target_id']);
     $group_options = array($space->nid => $space->title) + $group_options;
   }
-  elseif (($node->type === 'oa_space') && (!empty($node->nid)) {
+  elseif (($node->type === 'oa_space') && (!empty($node->nid))) {
     $group_options = array($node->nid => $node->title) + $group_options;
   }
 
