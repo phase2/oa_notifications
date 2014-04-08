@@ -125,7 +125,7 @@ function oa_notifications_get_notifications($node) {
     }
 
     // Get users who subscribed to entire section.
-    if (isset($node->oa_section_ref)) {
+    if (isset($node->oa_section_ref[LANGUAGE_NONE][0]['target_id'])) {
       $users = flag_get_content_flags('node', $node->oa_section_ref[LANGUAGE_NONE][0]['target_id'], 'subscribe_section_content');
       if (!empty($users) && is_array($users)) {
         $bucket += $users;
@@ -133,7 +133,7 @@ function oa_notifications_get_notifications($node) {
     }
 
     // Get users who subscribed to entire space.
-    if (isset($node->og_group_ref)) {
+    if (isset($node->og_group_ref[LANGUAGE_NONE][0]['target_id'])) {
       $users = flag_get_content_flags('node', $node->og_group_ref[LANGUAGE_NONE][0]['target_id'], 'subscribe_section_content');
       if (!empty($users) && is_array($users)) {
         $bucket += $users;
