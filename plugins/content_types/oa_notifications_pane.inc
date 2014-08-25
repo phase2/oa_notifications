@@ -183,7 +183,7 @@ function oa_notifications_subscribe_button($node) {
 function oa_notifications_show_details_button($node) {
   $details = l(t('Show Details'), 'js/oa_notifications/details/' . $node->nid, array(
     'attributes' => array(
-      'class' => array('btn'),
+      'class' => array('btn btn-default'),
       'data-toggle' => 'modal',
       'data-target' => '#oa-notifications-details',
     )
