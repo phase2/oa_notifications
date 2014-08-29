@@ -141,8 +141,8 @@ function oa_notifications_get_notifications($node) {
     }
 
     // Get users who subscribed to entire space.
-    if (isset($node->{OA_GROUP_FIELD}[LANGUAGE_NONE][0]['target_id'])) {
-      $users = flag_get_content_flags('node', $node->{OA_GROUP_FIELD}[LANGUAGE_NONE][0]['target_id'], 'subscribe_section_content');
+    if (isset($node->{OA_SPACE_FIELD}[LANGUAGE_NONE][0]['target_id'])) {
+      $users = flag_get_content_flags('node', $node->{OA_SPACE_FIELD}[LANGUAGE_NONE][0]['target_id'], 'subscribe_section_content');
       if (!empty($users) && is_array($users)) {
         $bucket += $users;
       }
@@ -560,9 +560,9 @@ function oa_notifications_get_default_notifications($section_id = 0, $space_id =
     }
     else {
       // Switch to the section's space, if available.
-      $space_id = empty($section->{OA_GROUP_FIELD}) ?
+      $space_id = empty($section->{OA_SPACE_FIELD}) ?
         $space_id :
-        $section->{OA_GROUP_FIELD}[LANGUAGE_NONE][0]['target_id'];
+        $section->{OA_SPACE_FIELD}[LANGUAGE_NONE][0]['target_id'];
     }
   }
 
