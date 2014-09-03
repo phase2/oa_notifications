@@ -181,14 +181,26 @@ function oa_notifications_subscribe_button($node) {
  * Builds the show details button.
  */
 function oa_notifications_show_details_button($node) {
-  $details = l(t('Show Details'), 'js/oa_notifications/details/' . $node->nid, array(
-    'attributes' => array(
-      'class' => array('btn btn-default'),
-      'data-toggle' => 'modal',
-      'data-target' => '#oa-notifications-details',
-    )
-  ));
-  $details .= theme('oa_styles_modal', array('modal_id' => 'oa-notifications-details', 'title' => t('Notification Details')));
+  ctools_include('modal');
+  ctools_modal_add_js();
+
+  $custom_style = array(
+    'oa-notifications-details' => array(
+      'modalSize' => array(
+        'type' => 'scale',
+        'width' => 0.5,
+        'height' => 0.5,
+      ),
+      'animation' => 'fadeIn',
+    ),
+  );
+
+  ctools_include('ajax');
+
+  drupal_add_js($custom_style, 'setting');
+
+  $details = ctools_modal_text_button(t('Show Details'), 'oa_notifications/nojs/details/' . $node->nid,
+    t('Show Details'), 'btn btn-default ctools-modal-oa-notifications-details');
 
   return array(
     '#type' => 'markup',
