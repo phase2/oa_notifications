@@ -745,16 +745,28 @@ function oa_notifications_preprocess_flag(&$vars) {
 function oa_notifications_reset() {
   if (isset($_SESSION[SKIP_FLAG])) {
     unset($_SESSION[SKIP_FLAG]);
+    oa_notification_skip(FALSE);
   }
 }
 
 /**
  * Return whether notification should be skipped.
+ *
+ * Notifications can be disabled for the session or for a single page load.
+ * Set the session value to disable it for a session (directly) or pass
+ * TRUE to this function for just this page load.
+ *
+ * @param $value
+ *   (optional) Set whether notification should be skipped for this page load.
+ *
+ * @return
+ *  TRUE if notifications should skipped for this page load
+ *  FALSE if notifications are enabled.
  */
-function oa_notification_skip() {
-  // See if session is overriding the notification option.
-  if (isset($_SESSION[SKIP_FLAG])) {
-    return $_SESSION[SKIP_FLAG];
+function oa_notification_skip($value = NULL) {
+  $skip = &drupal_static(__FUNCTION__, FALSE);
+  if (isset($value)) {
+    $skip = $value;
   }
-  return FALSE;
+  return $skip || !empty($_SESSION[SKIP_FLAG]);
 }
