@@ -190,7 +190,7 @@ function oa_notifications_get_users_for_node($node, $gid = NULL) {
 /**
  * Return all notifications for given source.  Optionally filtered by type.
  *
- * @param int $source_entity
+ * @param object $source_entity
  *   The loaded source entity.
  * @param string $source_type
  *   The entity type of the source (defaults to 'node').
@@ -216,7 +216,7 @@ function oa_notifications_load_multiple($source_entity, $source_type = 'node', $
   $notifications = array();
   $results = $query->execute()->fetchAllAssoc('notification_id');
 
-  foreach ($results as $id => $row) {
+  foreach ($results as $row) {
     $notifications[$row->target_type][$row->target_id] = $row;
   }
 
@@ -401,7 +401,6 @@ function oa_notifications_form_fields(&$form, &$form_state, $node) {
     'user' => array(),
   );
 
-  $notifications = array();
   // Get from form state, if available, for AJAX.
   $override = isset($form_state['values']['oa_notifications']['override']) ?
     $form_state['values']['oa_notifications']['override'] :
