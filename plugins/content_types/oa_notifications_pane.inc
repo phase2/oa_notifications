@@ -125,7 +125,7 @@ function oa_notifications_edit_form($form, &$form_state, $node) {
   oa_notifications_form_fields($form, $form_state, $node);
   $form['source_entity'] = array(
     '#type' => 'value',
-    '#value' => $node,
+    '#value' => $node->nid,
   );
 
   // Add things for direct pane updates

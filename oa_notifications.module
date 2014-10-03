@@ -238,7 +238,7 @@ function oa_notifications_save_notifications($values) {
   if (isset($values['source_entity']) && isset($values['source_type'])) {
     drupal_alter('oa_notifications_save', $values);
     $source_type = $values['source_type'];
-    $source_id = current(entity_extract_ids($source_type, $values['source_entity']));
+    $source_id = $values['source_entity'];
     $notifications = array();
 
     if (isset($values['override'])) {
@@ -288,7 +288,7 @@ function oa_notifications_save_for_source($source_id, $source_type, $notificatio
  */
 function oa_notifications_node_insert($node) {
   if (oa_notifications_is_notification_type($node)) {
-    $node->oa_notifications['source_entity'] = $node;
+    $node->oa_notifications['source_entity'] = $node->nid;
     oa_notifications_save_notifications($node->oa_notifications);
   }
 }
@@ -298,7 +298,7 @@ function oa_notifications_node_insert($node) {
  */
 function oa_notifications_node_update($node) {
   if (oa_notifications_is_notification_type($node) && isset($node->oa_notifications)) {
-    $node->oa_notifications['source_entity'] = $node;
+    $node->oa_notifications['source_entity'] = $node->nid;
     oa_notifications_save_notifications($node->oa_notifications);
   }
 }
@@ -392,7 +392,7 @@ function oa_notifications_form_fields(&$form, &$form_state, $node) {
   );
   $form['source_entity'] = array(
     '#type' => 'value',
-    '#value' => $node,
+    '#value' => $nid,
   );
 
   $default = array(
